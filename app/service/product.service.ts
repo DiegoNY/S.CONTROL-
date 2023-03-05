@@ -1,8 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { conflict, notFound } from '@hapi/boom';
 
-import { pool } from '../libs/postgres';
-
+import { dataSource } from '../libs/typeorm';
 class ProductsService {
 
     products: any;
@@ -11,8 +10,6 @@ class ProductsService {
     constructor() {
         this.products = [];
         this.generate();
-        this.pool = pool;
-        this.pool.on("error", (err: any) => console.error(err))
     }
 
     generate() {
@@ -41,9 +38,10 @@ class ProductsService {
     }
 
     async find() {
-        const query = 'SELECT * FROM task';
-        const rta = await this.pool?.query(query);
-        return rta?.rows;
+        const query = 'SELECT * FROM user';
+        const rta = await dataSource.query(query);
+
+        return this.products;
 
     }
 
