@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker'
-import { conflict, notFound } from '@hapi/boom';
+import { badImplementation, conflict, notFound } from '@hapi/boom';
+import { Products } from '../db/models/products.model';
 
 import { dataSource } from '../libs/typeorm';
 class ProductsService {
@@ -29,6 +30,26 @@ class ProductsService {
     }
 
     async create(data: any) {
+
+        const { category, sale_price, name, purchase_price, description, } = data
+        const product = new Products();
+
+        product.category = category;
+        product.sale_price = sale_price;
+        product.name = name;
+        product.purchase_price = purchase_price;
+        product.description = description;
+
+        await product.save()
+            .then(rta => {
+                return rta;
+            })
+            .catch(err => {
+                throw badImplementation(err)
+            })
+
+
+
         const newProduct = {
             _id: faker.datatype.uuid(),
             ...data
@@ -41,7 +62,7 @@ class ProductsService {
         const query = 'SELECT * FROM user';
         const rta = await dataSource.query(query);
 
-        return this.products;
+        return rta;
 
     }
 

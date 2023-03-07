@@ -10,7 +10,10 @@ const dataSource = new DataSource({
     password: `${config.dbPassword}`,
     database: `${config.dbName}`,
     entities: ["../db/models/*.ts"],
-    synchronize:true,
+    migrations: ["../db/migrations/*ts"],
+    migrationsTableName: "custom_migration_table",
+    // synchronize: true,
+    migrationsRun: true,
     logging: true
 });
 
