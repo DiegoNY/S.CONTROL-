@@ -1,6 +1,8 @@
 import { DataSource } from "typeorm";
 
 import { config } from '../config/config';
+import { Category } from "../db/models/category.model";
+import { Products } from "../db/models/products.model";
 
 
 const dataSource = new DataSource({
@@ -9,21 +11,12 @@ const dataSource = new DataSource({
     username: `${config.dbUser}`,
     password: `${config.dbPassword}`,
     database: `${config.dbName}`,
-    entities: ["../db/models/*.ts"],
+    entities: [Products, Category],
     migrations: ["../db/migrations/*ts"],
     migrationsTableName: "custom_migration_table",
-    // synchronize: true,
+    synchronize: true,
     migrationsRun: true,
     logging: true
 });
-
-dataSource
-    .initialize()
-    .then(() => {
-        console.log(`Orm accediendo a la base de datos Postgres en el puerto ${config.dbHost} 🐎`)
-    })
-    .catch((err) => {
-        console.error("Error en la inicializacion del Orm Typeorm Debuguear 🦧", err)
-    })
 
 export { dataSource }

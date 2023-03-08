@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only app/index.ts",
+    "build": "tsc",
+    "start": "nodemon dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint . --ext .ts",
-    "typeorm": "typeorm-ts-node-esm",
-    "m:create": "npm run typeorm migration:create",
-    "m:gen": "npm run typeorm migration:generate ./app/db/migrations -d ./app/libs/typeorm.ts",
-    "m:run": "npm run typeorm migration:run -- -d ./app/libs/typeorm.ts"
+    "typeorm": "typeorm-ts-node-esm ",
+    "m:create": "npx run typeorm migration:create --name",
+    "m:gen": "npm run typeorm migration:generate --name",
+    "m:run": "npm run typeorm migration:run"
   },
   "keywords": [],
   "author": "",

@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, JoinColumn, OneToOne, ManyToOne } from 'typeorm'
+import { Category } from './category.model';
 
 @Entity()
 class Products extends BaseEntity {
@@ -16,8 +17,8 @@ class Products extends BaseEntity {
     @Column()
     sale_price: number
 
-    @Column()
-    category: number
+    @ManyToOne(() => Category, (category) => category.products)
+    category: Category
 
     @CreateDateColumn()
     created_at: Date;

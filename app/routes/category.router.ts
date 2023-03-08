@@ -1,14 +1,13 @@
 import express from 'express';
 /**Service 🐍 */
-
-import { ProductsService } from '../service/product.service';
-const service = new ProductsService();
+import { CategoryService } from '../service/category.service';
+const service = new CategoryService();
 
 /**END Service */
 
 /**Schema */
 import { validatorHandler } from '../middlewares/validator.handler';
-import { createProductSchema, getProductSchema } from '../schema/product.schema';
+import { createCategorySchema, getCategorySchema } from '../schema/category.schema';
 /**End Schema */
 
 /**initializing router 🐱‍🐉*/
@@ -20,14 +19,14 @@ router.get('/', async (req, res) => {
     res.send(products);
 })
 
-router.get('/:_id',
-    validatorHandler(getProductSchema, 'params'),
+router.get('/:id',
+    validatorHandler(getCategorySchema, 'params'),
     async (req, res, next) => {
 
         try {
-            const { _id } = req.params;
-            const product = await service.findOne(_id);
-            res.json(product)
+            const { id } = req.params;
+            const category = await service.findOne(Number(id));
+            res.json(category)
         } catch (error) {
             next(error);
         }
@@ -35,7 +34,7 @@ router.get('/:_id',
     })
 
 router.post('/',
-    validatorHandler(createProductSchema, 'body'),
+    validatorHandler(createCategorySchema, 'body'),
     async (req, res, next) => {
         try {
 
@@ -52,13 +51,13 @@ router.post('/',
     })
 
 router.patch('/:id',
-    validatorHandler(getProductSchema, 'params'),
+    validatorHandler(getCategorySchema, 'params'),
     async (req, res) => {
         const { id } = req.params;
         const body = req.body;
-        const newProduct = await service.update(id, body);
+        const newCategory = await service.update(id, body);
 
-        res.json(newProduct)
+        res.json(newCategory)
     })
 
 
@@ -68,4 +67,4 @@ router.delete('/:id', async (req, res) => {
 
     res.json(rta);
 })
-export { router as products } 
+export { router as category } 

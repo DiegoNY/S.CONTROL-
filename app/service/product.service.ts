@@ -1,8 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { badImplementation, conflict, notFound } from '@hapi/boom';
 import { Products } from '../db/models/products.model';
-
-import { dataSource } from '../libs/typeorm';
+// import { dataSource } from '../libs/typeorm';
 class ProductsService {
 
     products: any;
@@ -31,39 +30,30 @@ class ProductsService {
 
     async create(data: any) {
 
-        const { category, sale_price, name, purchase_price, description, } = data
-        const product = new Products();
+        try {
+            const { category, sale_price, name, purchase_price, description, } = data;
+            const product = new Products();
 
-        product.category = category;
-        product.sale_price = sale_price;
-        product.name = name;
-        product.purchase_price = purchase_price;
-        product.description = description;
+            product.category = category;
+            product.sale_price = sale_price;
+            product.name = name;
+            product.purchase_price = purchase_price;
+            product.description = description;
 
-        await product.save()
-            .then(rta => {
-                return rta;
-            })
-            .catch(err => {
-                throw badImplementation(err)
-            })
+            (await product.save()).category;
+            return product;
 
+        } catch (error) {
 
-
-        const newProduct = {
-            _id: faker.datatype.uuid(),
-            ...data
+            throw badImplementation('Error al agregar a la base de datos', error);
         }
-        this.products.push(newProduct);
-        return newProduct;
+
+
     }
 
     async find() {
-        const query = 'SELECT * FROM user';
-        const rta = await dataSource.query(query);
-
+        const rta = await Products.find();
         return rta;
-
     }
 
     async findOne(id: string) {

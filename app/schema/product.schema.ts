@@ -1,11 +1,11 @@
 import Joi from 'joi';
 
-const _id = Joi.string().uuid();
+const id = Joi.string().uuid();
 const name = Joi.string().min(3).max(50);
 const purchase_price = Joi.number().min(1);
 const sale_price = Joi.number().min(1);
 const description = Joi.string().min(3).max(400);
-const category = Joi.string();
+const category = Joi.number();
 
 
 const createProductSchema = Joi.object({
@@ -17,7 +17,7 @@ const createProductSchema = Joi.object({
 })
 
 const getProductSchema = Joi.object({
-    _id: _id.required(),
+    id: id.required(),
 })
 
 export { createProductSchema, getProductSchema }
