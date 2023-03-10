@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { badImplementation, conflict, notFound } from '@hapi/boom';
 import { Products } from '../db/models/products.model';
-// import { dataSource } from '../libs/typeorm';
+import { ProductsInterface } from '../interface/product.interface';
 class ProductsService {
 
     products: any;
@@ -40,50 +40,67 @@ class ProductsService {
             product.purchase_price = purchase_price;
             product.description = description;
 
-            (await product.save()).category;
+            await product.save();
             return product;
 
         } catch (error) {
 
-            throw badImplementation('Error al agregar a la base de datos', error);
+            throw badImplementation('Error al agregar a la base de datos  [SERVICE PRODUCTS]', error);
         }
 
 
     }
 
     async find() {
-        const rta = await Products.find();
-        return rta;
+        try {
+
+            const rta = await Products.find({
+                relations: {
+                    category: true
+                }
+            });
+            return rta;
+        } catch (error) {
+            throw badImplementation('Error al mostrar productos [SERVICE PRODUCTS]', error)
+        }
     }
 
-    async findOne(id: string) {
-        const product = this.products.find((item: any) => item._id === id);
+    async findOne(id: number) {
+
+        const product = await Products.findOne({
+            where: {
+                id: id
+            }
+        })
 
         if (!product) {
             throw notFound("product not found");
         }
 
-        if (product.isInactive) {
+        if (product.is_active == false) {
             throw conflict("product is inactive")
         }
-
         return product;
+
+
+
     }
 
-    async update(id: string, changes: any) {
+    async update(id: number, changes: ProductsInterface) {
 
-        const index = this.products.find((item: any) => item._id === id)
-        if (index === -1) {
+        const product = await Products.find({
+            where: {
+                id: id
+            }
+        })
+
+        if (!product) {
             throw notFound("product not found");
         }
 
-        const product = this.products[index];
-        this.products[index] = {
-            ...product,
-            ...changes
-        };
+        await Products.update({ id: id }, changes);
 
-        return this.products[index];
+        return { ...product, ...changes };
     }
 
     async delete(id: string) {

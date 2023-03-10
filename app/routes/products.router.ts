@@ -26,7 +26,7 @@ router.get('/:_id',
 
         try {
             const { _id } = req.params;
-            const product = await service.findOne(_id);
+            const product = await service.findOne(Number(_id));
             res.json(product)
         } catch (error) {
             next(error);
@@ -51,14 +51,18 @@ router.post('/',
         }
     })
 
-router.patch('/:id',
+router.patch('/:_id',
     validatorHandler(getProductSchema, 'params'),
-    async (req, res) => {
-        const { id } = req.params;
-        const body = req.body;
-        const newProduct = await service.update(id, body);
+    async (req, res, next) => {
+        try {
+            const { _id } = req.params;
+            const body = req.body;
+            const newProduct = await service.update(Number(_id), body);
 
-        res.json(newProduct)
+            res.json(newProduct)
+        } catch (error) {
+            next(error)
+        }
     })
 
 

@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-const id = Joi.string().uuid();
+const _id = Joi.number().id();
 const name = Joi.string().min(3).max(50);
 const purchase_price = Joi.number().min(1);
 const sale_price = Joi.number().min(1);
@@ -17,7 +17,7 @@ const createProductSchema = Joi.object({
 })
 
 const getProductSchema = Joi.object({
-    id: id.required(),
+    _id: _id.required(),
 })
 
 export { createProductSchema, getProductSchema }
